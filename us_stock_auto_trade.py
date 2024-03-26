@@ -15,7 +15,7 @@ ACCESS_TOKEN = ""
 CANO = hantu['cano']
 ACNT_PRDT_CD = hantu['acnt_prdt_cd']
 URL_BASE = hantu['url_base']
-WEBHOOK_URL = hantu['webhook_url']
+WEBHOOK_URL = _cfg['webhook_url']
 
 def send_message(msg):
     """디스코드 메세지 전송"""
