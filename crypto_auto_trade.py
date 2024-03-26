@@ -2,10 +2,12 @@ import yaml
 import pyupbit
 
 # Config 불러오기
-with open('config.yml', encoding='UTF-8') as ymlfile:
+with open('config/auto-trade-config.yml', encoding='UTF-8') as ymlfile:
     _cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
-ACCESS = _cfg['upbit']['access']
-SECRET = _cfg['upbit']['secret']
+# ACCESS = _cfg['upbit']['access-home']
+# SECRET = _cfg['upbit']['secret-home']
+ACCESS = _cfg['upbit']['access-work']
+SECRET = _cfg['upbit']['secret-work']
 
 def login():
     return pyupbit.Upbit(ACCESS, SECRET)
