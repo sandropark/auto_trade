@@ -31,7 +31,8 @@ yesterday = today - dt.timedelta(1)
 
 current_price = ub.get_current_price(BTC)
 bit_coin_prices_df = ub.get_ohlcv(BTC, count=40)
-print(ub.get_ohlcv(BTC, count=48, interval='minute60'))
+df = ub.get_ohlcv(BTC, count=48, interval='minute60')
+
 
 yesterday_price = bit_coin_prices_df.iloc[-2]
 today_price = bit_coin_prices_df.iloc[-1]
