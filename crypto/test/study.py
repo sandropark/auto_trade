@@ -1,6 +1,7 @@
 import unittest as ut
 import datetime as dt
 import pandas as pd
+import numpy as np
 
 class Test(ut.TestCase):
     def test_같은_객체는_동일_동등하다(self):
@@ -21,6 +22,11 @@ class Test(ut.TestCase):
         self.assertTrue(a == None)
         self.assertTrue(a == b)
         self.assertTrue(a is b)
+    
+    def test(self):
+        target = 10
+        arr = np.array([5, 15])
+        self.assertEqual((target > arr).mean(), 0.5)
 
 if __name__ == '__main__':
     ut.main()

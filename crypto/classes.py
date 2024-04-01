@@ -11,7 +11,7 @@ class BuyingSignal:
         return PriceUtils.get_range(self.price.get_yesterday_am_h1())
 
     def get_recent_20_days_avg_noise_ratio(self):
-        return PriceUtils.get_avg_noise_ratio(self.price.get_recent_20_days_d1())
+        return PriceUtils.get_avg_noise_ratio(self.price.get_recent_20days_d1())
 
     def shall_i_buy(self) -> bool:
         return self.price.get_current_price() > self.price.get_today_open_price() + (self.get_yesterday_am_range() * self.get_recent_20_days_avg_noise_ratio())
@@ -33,17 +33,18 @@ class InvestmentProportion:
         self.price = price
         self.target_volatility = target_volatility
     
-    def __get_yesterday_am_volatility(self) -> float:
-        return PriceUtils.get_range_ratio(self.price.get_yesterday_am_h1())
+    def _get_yesterday_am_volatility(self) -> float:
+        # 최근 5일의 1일 변동성 평균
+        return PriceUtils.get_volatility(self.price.get_yesterday_am_h1())
 
-    def __get_avg_ma_score(self) -> float:
+    def _get_avg_ma_score(self) -> float:
         # 최근 20일,60분 봉 데이터
-        yesterday_3d_ma = self.price.get_recent_20_days_h1_am().rolling(3).mean().iloc[-2]['open']
-        yesterday_5d_ma = self.price.get_recent_20_days_h1_am().rolling(5).mean().iloc[-2]['open']
-        yesterday_10d_ma = self.price.get_recent_20_days_h1_am().rolling(10).mean().iloc[-2]['open']
-        yesterday_20d_ma = self.price.get_recent_20_days_h1_am().rolling(20).mean().iloc[-2]['open']
+        yesterday_3d_ma = self.price.get_recent_21days_am_d1().rolling(3).mean().iloc[-2]['close']
+        yesterday_5d_ma = self.price.get_recent_21days_am_d1().rolling(5).mean().iloc[-2]['close']
+        yesterday_10d_ma = self.price.get_recent_21days_am_d1().rolling(10).mean().iloc[-2]['close']
+        yesterday_20d_ma = self.price.get_recent_21days_am_d1().rolling(20).mean().iloc[-2]['close']
         # 어제 종가
-        return np.mean(self.price.get_yesterday_am_close_price() > np.array([yesterday_3d_ma, yesterday_5d_ma, yesterday_10d_ma, yesterday_20d_ma]))
+        return (self.price.get_yesterday_am_close_price() > np.array([yesterday_3d_ma, yesterday_5d_ma, yesterday_10d_ma, yesterday_20d_ma])).mean()
     
     def get_investment_proportion(self) -> float:
-        return (self.target_volatility / self.__get_yesterday_am_volatility()) * self.__get_avg_ma_score() / 100
+        return (self.target_volatility / self._get_yesterday_am_volatility()) * self._get_avg_ma_score()
