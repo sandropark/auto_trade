@@ -11,6 +11,7 @@ pyyaml = "^6.0.1"
 requests = "^2.31.0"
 pytz = "^2024.1"
 pyupbit = "^0.2.33"
+flask = "^3.0.2"
 
 
 [build-system]

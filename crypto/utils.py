@@ -53,6 +53,9 @@ class Price:
             )['open'].item()
         return self.today_open_price
 
+    def get_last_5days_am_d1(self):
+        return self.get_recent_21days_am_d1().iloc[-5:]
+
     def get_yesterday_am_h1(self):
         if self.yesterday_am_h1 is None or self.time.check_day_changed():
             self.yesterday_am_h1 = pu.get_ohlcv(
@@ -84,7 +87,7 @@ class Price:
         if self.recent_21days_am_d1 is None or self.time.check_day_changed():
             recent_21days_h1 = self._get_recent_21days_h1()
             self.recent_21days_am_d1 = recent_21days_h1[recent_21days_h1.index.hour < 12].groupby('date').agg(
-                {'open': 'mean', 'high' : 'max', 'low' : 'min', 'close': 'mean', 'volume': 'mean'}
+                {'open': 'first', 'high' : 'max', 'low' : 'min', 'close': 'last', 'volume': 'sum'}
             )
         return self.recent_21days_am_d1
 

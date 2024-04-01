@@ -33,9 +33,9 @@ class InvestmentProportion:
         self.price = price
         self.target_volatility = target_volatility
     
-    def _get_yesterday_am_volatility(self) -> float:
-        # 최근 5일의 1일 변동성 평균
-        return PriceUtils.get_volatility(self.price.get_yesterday_am_h1())
+    def _get_last_5days_am_volatility(self) -> float:
+        last_5days_am_d1 = self.price.get_last_5days_am_d1()
+        return ((last_5days_am_d1['high'] - last_5days_am_d1['low']) / last_5days_am_d1['open']).mean()
 
     def _get_avg_ma_score(self) -> float:
         # 최근 20일,60분 봉 데이터
@@ -47,4 +47,12 @@ class InvestmentProportion:
         return (self.price.get_yesterday_am_close_price() > np.array([yesterday_3d_ma, yesterday_5d_ma, yesterday_10d_ma, yesterday_20d_ma])).mean()
     
     def get_investment_proportion(self) -> float:
-        return (self.target_volatility / self._get_yesterday_am_volatility()) * self._get_avg_ma_score()
+        return self.target_volatility / self._get_last_5days_am_volatility() * self._get_avg_ma_score() / 100
+    
+    def report(self) -> str:
+        return f'''
+                {'목표 변동성:%11s' % format(self.target_volatility, ',')}
+                {'최근 5일 오전 변동성:%6s' % format(round(self._get_last_5days_am_volatility(), 3), ',')}
+                {'평균 MA 점수:%12s' % format(round(self._get_avg_ma_score(), 3), ',')}
+                {'투자 비율:%17s' % format(round(self.get_investment_proportion(), 3), ',')}
+                '''

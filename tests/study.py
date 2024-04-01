@@ -3,6 +3,10 @@ import datetime as dt
 import pandas as pd
 import numpy as np
 
+from crypto import classes
+
+b = classes.BuyingSignal()
+
 class Test(ut.TestCase):
     def test_같은_객체는_동일_동등하다(self):
         date = dt.date(2021, 1, 1)

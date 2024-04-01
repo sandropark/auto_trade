@@ -85,6 +85,15 @@ class TestPrice(ut.TestCase):
         # 최근 21일 데이터의 첫번째 데이터는 21일 전 0시여야 한다.
         self.assertEqual(recent_21days_h1.iloc[0].name, before_21days_0am)
 
+    def test_get_last_5days_am_d1(self):
+        # given
+
+        # when
+        last_5days_am_d1 = utils.Price().get_last_5days_am_d1()
+
+        # then
+        print(last_5days_am_d1)
+
 class TestPriceUtil(ut.TestCase):
     # 노이즈 비율을 구하는 테스트
     def test_get_avg_noise_ratio(self):
@@ -144,12 +153,21 @@ class TestPriceUtil(ut.TestCase):
         self.assertEqual(range_ratio, 0.25)
 
 class TestInvestmentProportion(ut.TestCase):
+    def test_get_last_5days_am_volatility(self):
+        # given
+
+        # when
+        yesterday_am_volatility = classes.InvestmentProportion()._get_last_5days_am_volatility()
+
+        # then
+        self.assertEqual(yesterday_am_volatility, 0.01)
+
     def test_get_avg_ma_score(self):
         # given
 
         # when
         avg_ma_score = classes.InvestmentProportion()._get_avg_ma_score()
-        yesterday_am_volatility = classes.InvestmentProportion()._get_yesterday_am_volatility()
+        yesterday_am_volatility = classes.InvestmentProportion()._get_last_5days_am_volatility()
         invest_proportion = classes.InvestmentProportion().get_investment_proportion()
 
         # then
