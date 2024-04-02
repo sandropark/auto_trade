@@ -12,6 +12,7 @@ requests = "^2.31.0"
 pytz = "^2024.1"
 pyupbit = "^0.2.33"
 flask = "^3.0.2"
+gspread = "^6.1.0"
 
 
 [build-system]
