@@ -1,6 +1,11 @@
-import classes
+import sys
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(BASE_DIR)
+
 import time
 import datetime as dt
+import crypto.classes as classes
 
 def main():
     price = classes.Price()

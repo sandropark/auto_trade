@@ -1,9 +1,7 @@
 import pyupbit as pu
 import pandas as pd
 import datetime as dt
-from pytz import timezone
-import numpy as np
-from enum import Enum
+import crypto.currency as currency
 
 class MyTime:
     def __init__(self, today : dt.datetime = dt.datetime.now()):
@@ -21,11 +19,8 @@ class MyTime:
     def get_today_1am(self) -> dt.datetime:
         return self.__set_time(1)
 
-    def get_yesterday_12pm(self) -> dt.datetime:
-        return self.__set_time(12) - dt.timedelta(days=1)
-    
-    def get_yesterday_11am(self) -> dt.datetime:
-        return self.__set_time(11) - dt.timedelta(days=1)
+    def get_yesterday(self, hour:int=0) -> dt.datetime:
+        return self.__set_time(hour) - dt.timedelta(days=1)
     
     def get_before_21days_0am(self) -> dt.datetime:
         return self.__set_time(0) - dt.timedelta(days=21)
@@ -47,35 +42,36 @@ class Price:
     def get_today_open_price(self):
         if self.today_open_price is None or self.time.check_day_changed():
             self.today_open_price = pu.get_ohlcv(
-                Currency.BTC.value, 
+                currency.BTC, 
                 count=1, 
                 interval='minute60',to=self.time.get_today_1am() - dt.timedelta(hours=9)
             )['open'].item()
         return self.today_open_price
 
     def get_last_5days_am_d1(self):
-        return self.get_recent_21days_am_d1().iloc[-5:]
+        return self.get_recent_21days_am_d1().iloc[-6:-1]
 
     def get_yesterday_am_h1(self):
         if self.yesterday_am_h1 is None or self.time.check_day_changed():
-            self.yesterday_am_h1 = pu.get_ohlcv(
-                Currency.BTC.value, 
+            yesterday_am = pu.get_ohlcv(
+                currency.BTC,
                 count=12, interval='minute60', 
-                to=self.time.get_yesterday_12pm() - dt.timedelta(hours=9)
+                to=self.time.get_yesterday(12) - dt.timedelta(hours=9)
             )
+            self.yesterday_am_h1 = yesterday_am[yesterday_am.index >= self.time.get_yesterday(0)]
         return self.yesterday_am_h1
 
     def get_recent_20days_d1(self):
         if self.recent_20days_d1 is None or self.time.check_day_changed():
-            self.recent_20days_d1 = pu.get_ohlcv(Currency.BTC.value, count=20)
+            self.recent_20days_d1 = pu.get_ohlcv(currency.BTC, count=20)
         return self.recent_20days_d1
 
     def get_current_price(self):
-        return pu.get_current_price(Currency.BTC.value)
+        return pu.get_current_price(currency.BTC)
     
     def _get_recent_21days_h1(self):
         recent_21days_h1 = pu.get_ohlcv(
-            Currency.BTC.value, 
+            currency.BTC, 
             count=24 * 22,
             interval='minute60',
             period=0.1
@@ -93,19 +89,3 @@ class Price:
 
     def get_yesterday_am_close_price(self) -> float:
         return self.get_yesterday_am_h1().iloc[-1]['close'].item()
-
-class PriceUtils:
-    @staticmethod
-    def get_avg_noise_ratio(df : pd.DataFrame) -> float:
-        return (1 - abs(df['open']-df['close']) / (df['high']-df['low'])).mean()
-    
-    @staticmethod
-    def get_range(df : pd.DataFrame) -> float:
-        return df['high'].max() - df['low'].min()
-
-    @staticmethod
-    def get_volatility(df : pd.DataFrame) -> float:
-        return PriceUtils.get_range(df) / df.iloc[0]['open']
-
-class Currency(Enum):
-    BTC = 'KRW-BTC'

@@ -1,17 +1,17 @@
-import pandas as pd
 import numpy as np
-
-from utils import Price, PriceUtils
+import pandas as pd
+from crypto.utils import Price
+import crypto.price_utils as price_utils
 
 class BuyingSignal:
     def __init__(self, price : Price = Price()):
         self.price = price
 
     def get_yesterday_am_range(self) -> float:
-        return PriceUtils.get_range(self.price.get_yesterday_am_h1())
+        return price_utils.get_range(self.price.get_yesterday_am_h1())
 
     def get_recent_20_days_avg_noise_ratio(self):
-        return PriceUtils.get_avg_noise_ratio(self.price.get_recent_20days_d1())
+        return price_utils.get_avg_noise_ratio(self.price.get_recent_20days_d1())
 
     def shall_i_buy(self) -> bool:
         return self.price.get_current_price() > self.price.get_today_open_price() + (self.get_yesterday_am_range() * self.get_recent_20_days_avg_noise_ratio())
@@ -35,7 +35,10 @@ class InvestmentProportion:
     
     def _get_last_5days_am_volatility(self) -> float:
         last_5days_am_d1 = self.price.get_last_5days_am_d1()
-        return ((last_5days_am_d1['high'] - last_5days_am_d1['low']) / last_5days_am_d1['open']).mean()
+        return self._get_volatility(last_5days_am_d1)
+
+    def _get_volatility(self, df : pd.DataFrame) -> float:
+        return ((df['high'] - df['low']) / df['open']).mean()
 
     def _get_avg_ma_score(self) -> float:
         # 최근 20일,60분 봉 데이터

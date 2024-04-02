@@ -1,18 +1,33 @@
+import sys
+import os
+BASE_DIR = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
+sys.path.append(BASE_DIR)
+
 import unittest as ut
 import pyupbit as pu
 import datetime as dt
 import pandas as pd
 import numpy as np
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-import utils, classes
+import crypto.utils as utils
+import crypto.classes as classes
+import crypto.price_utils as priceUtils
 
 class TestMyTime(ut.TestCase):
     # 시간을 비교하는 테스트
     def test_equals(self):
         my_time = utils.MyTime()
         self.assertTrue(my_time._equals(dt.date(2021, 1, 1), dt.date(2021, 1, 1)))
+    
+    def test_get_yesterday_12pm(self):
+        # given
+        my_time = utils.MyTime()
+        yesterday_12pm_expact = my_time.get_now().replace(hour=12, minute=0, second=0, microsecond=0) - dt.timedelta(days=1)
+
+        # when
+        yesterday_12pm_actual = my_time.get_yesterday(12)
+
+        # then
+        self.assertEqual(yesterday_12pm_expact, yesterday_12pm_actual)
 
 class TestPrice(ut.TestCase):
     # 어제 11시(오전 종가) 데이터 가져오는 테스트
@@ -85,15 +100,6 @@ class TestPrice(ut.TestCase):
         # 최근 21일 데이터의 첫번째 데이터는 21일 전 0시여야 한다.
         self.assertEqual(recent_21days_h1.iloc[0].name, before_21days_0am)
 
-    def test_get_last_5days_am_d1(self):
-        # given
-
-        # when
-        last_5days_am_d1 = utils.Price().get_last_5days_am_d1()
-
-        # then
-        print(last_5days_am_d1)
-
 class TestPriceUtil(ut.TestCase):
     # 노이즈 비율을 구하는 테스트
     def test_get_avg_noise_ratio(self):
@@ -109,7 +115,7 @@ class TestPriceUtil(ut.TestCase):
         )
 
         # when
-        avg_noise_ratio = utils.PriceUtils.get_avg_noise_ratio(df)
+        avg_noise_ratio = priceUtils.get_avg_noise_ratio(df)
 
         # then
         self.assertEqual(avg_noise_ratio, 0.4)
@@ -128,7 +134,7 @@ class TestPriceUtil(ut.TestCase):
         )
 
         # when
-        range = utils.PriceUtils.get_range(df)
+        range = priceUtils.get_range(df)
 
         # then
         self.assertEqual(range, 25)
@@ -147,34 +153,30 @@ class TestPriceUtil(ut.TestCase):
         )
 
         # when
-        range_ratio = utils.PriceUtils.get_volatility(df)
+        range_ratio = priceUtils.get_volatility(df)
 
         # then
         self.assertEqual(range_ratio, 0.25)
 
 class TestInvestmentProportion(ut.TestCase):
-    def test_get_last_5days_am_volatility(self):
+    # 변동성 계산 테스트
+    def test_get_volatility(self):
         # given
+        df = pd.DataFrame(
+            {
+                'open': [100, 100],
+                'high': [120, 130],
+                'low': [95, 110],
+                'close': [115, 125]
+            },  
+            index=[0, 1]
+        )
 
         # when
-        yesterday_am_volatility = classes.InvestmentProportion()._get_last_5days_am_volatility()
+        volatility = classes.InvestmentProportion()._get_volatility(df)
 
         # then
-        self.assertEqual(yesterday_am_volatility, 0.01)
+        self.assertEqual(volatility, 0.225)
 
-    def test_get_avg_ma_score(self):
-        # given
-
-        # when
-        avg_ma_score = classes.InvestmentProportion()._get_avg_ma_score()
-        yesterday_am_volatility = classes.InvestmentProportion()._get_last_5days_am_volatility()
-        invest_proportion = classes.InvestmentProportion().get_investment_proportion()
-
-        # then
-        print(avg_ma_score)
-        print(yesterday_am_volatility)
-        print(1 / yesterday_am_volatility)
-        print(invest_proportion)
-
-if __name__ == '__main__':  
+if __name__ == '__main__':
     ut.main()
