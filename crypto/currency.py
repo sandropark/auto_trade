@@ -1,1 +1,2 @@
 BTC = 'KRW-BTC'
+KRW = 'KRW'
