@@ -66,7 +66,7 @@ class Price:
             self.recent_20days_d1 = pu.get_ohlcv(currency.BTC, count=20)
         return self.recent_20days_d1
 
-    def get_current_price(self):
+    def get_current_price(self) -> float:
         return pu.get_current_price(currency.BTC)
     
     def _get_recent_21days_h1(self):

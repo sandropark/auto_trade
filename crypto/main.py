@@ -11,8 +11,7 @@ def main():
     bs = BuyingSignal(price)
     ip = InvestmentProportion(price)
     crypto = Crypto(bs, ip)
-    # crypto.run()
-    crypto.buy()
+    crypto.run()
 
 if __name__ == '__main__':
     main()
