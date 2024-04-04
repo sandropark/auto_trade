@@ -20,6 +20,7 @@ class Crypto:
         self.buying_signal = puying_signal
         self.investment_proportion = investment_proportion
         self.bought = False
+        self.work = True
     
     # TODO : 비동기
     def log(self, message : str):
@@ -69,3 +70,12 @@ class Crypto:
                 self.sell_all()
                 self.bought = False
                 time.sleep(60)
+
+    def start(self):
+        self.work = True
+        while self.work:
+            print("실행 중")
+            time.sleep(1)
+    
+    def stop(self):
+        self.work = False
