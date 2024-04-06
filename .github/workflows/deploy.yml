@@ -30,9 +30,9 @@ jobs:
           script: |
             if ls | grep -q auto-trade; then
               cd auto-trade
-              git pull
+              git pull --recurse-submodules
             else 
-              git clone https://github.com/sandropark/auto-trade.git
+              git clone --recurse-submodules https://github.com/sandropark/auto-trade.git
               cd auto-trade
             fi
             sudo docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
