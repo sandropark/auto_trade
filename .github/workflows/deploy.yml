@@ -1,0 +1,39 @@
+name: Depoly
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      #  소스코드 불러오기
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Docker Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/auto-trade:${{ needs.base.outputs.tag_name }}
+
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.OCI_APPLICATION_HOST }}
+          username: ${{ secrets.OCI_APPLICATION_USERNAME }}
+          key: ${{ secrets.OCI_SSH_KEY }}
+          port: 22
+          script: |
+            if ls | grep -q auto-trade; then
+              cd auto-trade
+              git pull --recurse-submodules
+            else 
+              git clone --recurse-submodules https://github.com/sandropark/auto-trade.git
+              cd auto-trade
+            fi
+            sudo docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+            sudo docker compose up -d

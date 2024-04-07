@@ -8,10 +8,8 @@ pd.set_option('display.float_format', lambda x: '%.1f' % x)
 # Config 불러오기
 with open('config/auto-trade-config.yml', encoding='UTF-8') as ymlfile:
     _cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
-ACCESS = _cfg['upbit']['access-home']
-SECRET = _cfg['upbit']['secret-home']
-# ACCESS = _cfg['upbit']['access-work']
-# SECRET = _cfg['upbit']['secret-work']
+ACCESS = _cfg['upbit']['access']
+SECRET = _cfg['upbit']['secret']
 
 BTC = "KRW-BTC"
 TARGET_VOLATILITY = 1  # 목표 변동성

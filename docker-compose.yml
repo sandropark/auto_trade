@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  auto-trade:
+    image: auto-trade
+    ports:
+      - "5000:5000"
+    restart: always
