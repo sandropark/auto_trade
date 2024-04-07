@@ -13,6 +13,8 @@ jobs:
       #  소스코드 불러오기
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Docker Build and push
         uses: docker/build-push-action@v4
