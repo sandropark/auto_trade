@@ -7,14 +7,12 @@ from crypto import currency
 
 with open('config/auto-trade-config.yml', encoding='UTF-8') as ymlfile:
     _cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
-# ACCESS = _cfg['upbit']['access-home']
-# SECRET = _cfg['upbit']['secret-home']
-ACCESS = _cfg['upbit']['access-work']
-SECRET = _cfg['upbit']['secret-work']
+ACCESS = _cfg['upbit']['access']
+SECRET = _cfg['upbit']['secret']
 upbit : pu.Upbit = pu.Upbit(ACCESS, SECRET)
 
 
-# print(upbit.buy_market_order(currency.BTC, 5000))
+# print(upbit.buy_market_order(currency.BTC, 10000))
 # print(upbit.get_balance(currency.BTC))
 
 # print(balance['balance'])
