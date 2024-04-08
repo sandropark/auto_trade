@@ -80,7 +80,9 @@ class Crypto:
         while self.work:
             if self.balance == 0 and self.is_now_am():
                 Crypto.upbit.buy_market_order(currency.BTC, 100000)
-                self.balancee = Crypto.upbit.get_balance(currency.BTC)
+                while self.balance == 0: # 매수 될 때까지 대기
+                    self.balancee = Crypto.upbit.get_balance(currency.BTC)
+                    time.sleep(1)
 
             if self.balance != 0 and self.is_now_pm():
                 Crypto.upbit.sell_market_order(currency.BTC, Crypto.upbit.get_balance(currency.BTC))
