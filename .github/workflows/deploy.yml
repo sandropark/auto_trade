@@ -38,8 +38,7 @@ jobs:
           key: ${{ secrets.OCI_SSH_KEY }}
           port: 22
           script: |
-            cd /home/${{ secrets.OCI_APPLICATION_USERNAME }}
-            if ls | grep auto-trade; then
+            if ls | grep -q auto-trade; then
               cd auto-trade
               git pull --recurse-submodules
             else 
