@@ -18,10 +18,11 @@ jobs:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
       - name: Docker Build and push
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/auto-trade:${{ github.ref_name }}
+        run: |
+          docker build \
+          --push \
+          --platform linux/amd64 \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/auto-trade:${{ github.ref_name }} .
 
       - name: Deploy
         uses: appleboy/ssh-action@master
