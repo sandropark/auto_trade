@@ -39,5 +39,9 @@ jobs:
           port: 22
           script: |
             sudo docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-            sudo docker run --rm -d -p 5000:5000 \
+            if [ "$(sudo docker ps -q -f name=auto-trade)" ]; then
+              sudo docker stop auto-trade
+              sudo docker rm auto-trade
+            fi
+            sudo docker run -d -p 5000:5000 \
             --name auto-trade ${{ secrets.DOCKERHUB_USERNAME }}/auto-trade:${{ github.ref_name }}
