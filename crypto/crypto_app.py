@@ -18,8 +18,8 @@ class Crypto:
                  investment_proportion : InvestmentProportion = InvestmentProportion()):
         self.buying_signal = buying_signal
         self.investment_proportion = investment_proportion
-        self.bought : bool = False
         self.work : bool = True
+        self.balance : int = Crypto.upbit.get_balance(currency.BTC)
     
     # TODO : 비동기
     def log(self):
@@ -78,17 +78,13 @@ class Crypto:
     def start(self):
         self.work = True
         while self.work:
-            # 매수하지 않았고 오전인 경우
-            if not self.bought and self.is_now_am():
-                # 10만원 매수
+            if self.balance == 0 and self.is_now_am():
                 Crypto.upbit.buy_market_order(currency.BTC, 100000)
-                self.bought = True
+                self.balancee = Crypto.upbit.get_balance(currency.BTC)
 
-            # 매수했고 오후인 경우
-            if self.bought and self.is_now_pm():
-                # 전량 매도
+            if self.balance != 0 and self.is_now_pm():
                 Crypto.upbit.sell_market_order(currency.BTC, Crypto.upbit.get_balance(currency.BTC))
-                self.bought = False
+                self.balancee = 0
                 time.sleep(60)
             
             time.sleep(1)
