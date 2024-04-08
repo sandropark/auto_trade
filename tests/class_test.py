@@ -33,7 +33,7 @@ class TestPrice(ut.TestCase):
     # 어제 11시(오전 종가) 데이터 가져오는 테스트
     def test_get_yesterday_am_close_price(self):
         # given
-        now = dt.datetime.now()
+        now = utils.MyTime().get_now()
         # 어제 11시
         yesterday_11am = now.replace(hour=11, minute=0, second=0, microsecond=0) - dt.timedelta(days=1)
         # 어제 12시
@@ -58,7 +58,7 @@ class TestPrice(ut.TestCase):
     def test_get_yesterday_am_h1(self):
         # given
         price = utils.Price()
-        now = dt.datetime.now()
+        now = utils.MyTime().get_now()
         yesterday_0am = now.replace(hour=0, minute=0, second=0, microsecond=0) - dt.timedelta(days=1)
         yesterday_11am = now.replace(hour=11, minute=0, second=0, microsecond=0) - dt.timedelta(days=1)
 
@@ -76,9 +76,9 @@ class TestPrice(ut.TestCase):
             'KRW-BTC', 
             count=1,
             interval='minute60',
-            to=dt.datetime.now().replace(hour=1, minute=0, second=0, microsecond=0) - dt.timedelta(hours=9)
+            to=utils.MyTime.get_now().replace(hour=1, minute=0, second=0, microsecond=0) - dt.timedelta(hours=9)
         )
-        today_0_am = dt.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today_0_am = utils.MyTime.get_now().replace(hour=0, minute=0, second=0, microsecond=0)
 
         # when
         today_open_price_actual = utils.Price().get_today_open_price()
@@ -91,7 +91,7 @@ class TestPrice(ut.TestCase):
     # 최근 21일 데이터를 가져오는 테스트
     def test_get_recent_21days_h1(self):
         # given
-        before_21days_0am = dt.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - dt.timedelta(days=21)
+        before_21days_0am = utils.MyTime.get_now().replace(hour=0, minute=0, second=0, microsecond=0) - dt.timedelta(days=21)
 
         # when
         recent_21days_h1 = utils.Price()._get_recent_21days_h1()

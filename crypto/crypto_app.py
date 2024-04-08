@@ -2,7 +2,7 @@ import time
 import datetime as dt
 import pyupbit as pu
 import yaml
-from crypto import currency
+from crypto import currency, utils
 from crypto.classes import BuyingSignal, InvestmentProportion
 from infrastructure import chat_client, google_sheet_client
 
@@ -53,7 +53,7 @@ class Crypto:
     
     def run(self):
         while 1:
-            now = dt.datetime.now()
+            now = utils.MyTime().get_now()
 
             if not self.bought and self.__is_am(now) and self.shall_i_buy():
                 print('매수')
@@ -70,7 +70,7 @@ class Crypto:
                 time.sleep(60)
 
     def is_now_am(self) -> bool:
-        return dt.datetime.now().hour < 12
+        return utils.MyTime.get_now().hour < 12
     
     def is_now_pm(self) -> bool:
         return not self.is_now_am()
@@ -78,6 +78,8 @@ class Crypto:
     def start(self):
         self.work = True
         while self.work:
+            print(utils.MyTime.get_now())
+
             if self.balance == 0 and self.is_now_am():
                 Crypto.upbit.buy_market_order(currency.BTC, 100000)
                 while self.balance == 0: # 매수 될 때까지 대기

@@ -1,14 +1,15 @@
 import pyupbit as pu
 import pandas as pd
 import datetime as dt
+from pytz import timezone
 import crypto.currency as currency
 
 class MyTime:
-    def __init__(self, today : dt.datetime = dt.datetime.now()):
+    def __init__(self, today : dt.datetime = dt.datetime.now(timezone('Asia/Seoul'))):
         self.today : dt.datetime = today
 
-    def get_now(self) -> dt.datetime:
-        return dt.datetime.now()
+    def get_now() -> dt.datetime:
+        return dt.datetime.now(timezone('Asia/Seoul'))
 
     def check_day_changed(self) -> bool:
         if not self._equals(self.get_now().date(), self.today.date()):
