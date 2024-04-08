@@ -17,6 +17,12 @@ jobs:
           submodules: recursive
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
       - name: Docker Build and push
         run: |
           docker build \
