@@ -5,6 +5,9 @@ import yaml
 from crypto import currency, utils
 from crypto.classes import BuyingSignal, InvestmentProportion
 from infrastructure import chat_client, google_sheet_client
+import logging
+
+logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
 
 class Crypto:
     with open('config/auto-trade-config.yml', encoding='UTF-8') as ymlfile:
@@ -19,7 +22,7 @@ class Crypto:
         self.buying_signal = buying_signal
         self.investment_proportion = investment_proportion
         self.work : bool = True
-        self.balance : int = Crypto.upbit.get_balance(currency.BTC)
+        self.balance : float = Crypto.upbit.get_balance(currency.BTC)
     
     # TODO : 비동기
     def log(self):
@@ -78,20 +81,22 @@ class Crypto:
     def start(self):
         self.work = True
         while self.work:
-            print(utils.MyTime.get_now())
-
+            logging.debug("매매 봇 동작 중...")
             if self.balance == 0 and self.is_now_am():
+                logging.debug("매수 주문 실행")
                 Crypto.upbit.buy_market_order(currency.BTC, 100000)
                 while self.balance == 0: # 매수 될 때까지 대기
+                    logging.debug("매수 주문 후 잔고 조회 중...")
                     self.balancee = Crypto.upbit.get_balance(currency.BTC)
                     time.sleep(1)
 
             if self.balance != 0 and self.is_now_pm():
+                logging.debug("매도 주문 실행")
                 Crypto.upbit.sell_market_order(currency.BTC, Crypto.upbit.get_balance(currency.BTC))
                 self.balancee = 0
                 time.sleep(60)
             
-            time.sleep(1)
+            time.sleep(5)
 
     def stop(self):
         self.work = False
