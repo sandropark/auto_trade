@@ -11,9 +11,7 @@ logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging
 class Crypto:
     with open('config/auto-trade-config.yml', encoding='UTF-8') as ymlfile:
         _cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
-    ACCESS = _cfg['upbit']['access']
-    SECRET = _cfg['upbit']['secret']
-    upbit : pu.Upbit = pu.Upbit(ACCESS, SECRET)
+    upbit : pu.Upbit = pu.Upbit(_cfg['upbit']['access'], _cfg['upbit']['secret'])
     total_balance = 30000000    # 전체 자산 조회 (엑셀에서 가져오기)
 
     def __init__(self, buying_signal : BuyingSignal = BuyingSignal(), 
