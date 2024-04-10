@@ -39,7 +39,7 @@ jobs:
           port: 22
           script: |
             sudo docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
-            if [ "$(sudo docker ps -q -f name=auto-trade)" ]; then
+            if [ "$(sudo docker ps -a -q -f name=auto-trade)" ]; then
               sudo docker stop auto-trade
               sudo docker rm auto-trade
             fi
