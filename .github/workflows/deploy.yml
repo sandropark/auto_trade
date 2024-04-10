@@ -2,8 +2,8 @@ name: Depoly
 
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -28,7 +28,7 @@ jobs:
           docker build \
           --push \
           --platform linux/amd64 \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/auto-trade:${{ github.ref_name }} .
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/auto-trade:${{ github.run_number }} .
 
       - name: Deploy
         uses: appleboy/ssh-action@master
@@ -44,4 +44,4 @@ jobs:
               sudo docker rm auto-trade
             fi
             sudo docker run -d -p 5000:5000 \
-            --name auto-trade ${{ secrets.DOCKERHUB_USERNAME }}/auto-trade:${{ github.ref_name }}
+            --name auto-trade ${{ secrets.DOCKERHUB_USERNAME }}/auto-trade:${{ github.run_number }}

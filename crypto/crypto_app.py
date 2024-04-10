@@ -40,7 +40,6 @@ class Crypto:
         Crypto.upbit.buy_limit_order(currency.BTC, lowest_price, self.calculate_buying_quantity(lowest_price))
 
     def sell_all(self):
-        # 전량 매도
         Crypto.upbit.sell_market_order(currency.BTC, Crypto.upbit.get_balance(currency.BTC))
 
     def shall_i_buy(self) -> bool:
@@ -95,7 +94,7 @@ class Crypto:
 
             if self.balance != 0 and self.is_now_pm():
                 logging.debug("매도 주문 실행")
-                Crypto.upbit.sell_market_order(currency.BTC, Crypto.upbit.get_balance(currency.BTC))
+                self.sell_all()
                 self.balance = 0
                 time.sleep(60)
             
