@@ -23,6 +23,7 @@ class Crypto:
         self.investment_proportion = investment_proportion
         self.work : bool = True
         self.balance : float = Crypto.upbit.get_balance(currency.BTC)
+        self.target_balance : int = 0
     
     # TODO : 비동기
     def log(self):
@@ -79,12 +80,16 @@ class Crypto:
         return not self.is_now_am()
 
     def start(self):
+        
         self.work = True
+        self.target_balance = google_sheet_client.get_target_balance()
+        chat_client.send_message(f'최대 매수 금액 : {format(self.target_balance, ",")}')
+
         while self.work:
             logging.debug("매매 봇 동작 중...")
             if self.balance == 0 and self.is_now_am():
                 logging.debug("매수 주문 실행")
-                Crypto.upbit.buy_market_order(currency.BTC, 100000)
+                Crypto.upbit.buy_market_order(currency.BTC, self.target_balance)
                 while self.balance == 0: # 매수 될 때까지 대기
                     logging.debug("매수 주문 후 잔고 조회 중...")
                     self.balance = Crypto.upbit.get_balance(currency.BTC)
@@ -96,7 +101,7 @@ class Crypto:
                 self.balance = 0
                 time.sleep(60)
             
-            time.sleep(5)
+            time.sleep(10)
 
     def stop(self):
         self.work = False
