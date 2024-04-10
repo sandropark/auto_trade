@@ -1,1 +1,0 @@
-pu.get_orderbook(currency.BTC)

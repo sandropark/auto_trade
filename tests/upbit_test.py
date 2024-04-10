@@ -16,5 +16,5 @@ upbit : pu.Upbit = pu.Upbit(ACCESS, SECRET)
 # print(upbit.get_balance(currency.BTC))
 
 # print(balance['balance'])
-print(upbit.sell_market_order(currency.BTC, upbit.get_balance(currency.BTC)))
+# print(upbit.sell_market_order(currency.BTC, upbit.get_balance(currency.BTC)))
 print(upbit.get_balance(currency.BTC))

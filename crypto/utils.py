@@ -5,8 +5,8 @@ from pytz import timezone
 import crypto.currency as currency
 
 class MyTime:
-    def __init__(self, today : dt.datetime = dt.datetime.now(timezone('Asia/Seoul'))):
-        self.today : dt.datetime = today
+    def __init__(self):
+        self.today : dt.datetime = self.get_now()
 
     def get_now() -> dt.datetime:
         return dt.datetime.now(timezone('Asia/Seoul'))

@@ -1,7 +1,6 @@
 import datetime as dt
 import requests
 import yaml
-
 from crypto import utils
 
 with open('config/auto-trade-config.yml', encoding='UTF-8') as ymlfile:
