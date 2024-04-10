@@ -19,5 +19,3 @@ def append_row(data : list):
 
 def get_target_balance() -> int:
     return int(sheet_crypto_config.acell('A2').value.replace(',', ''))
-
-print(get_target_balance())

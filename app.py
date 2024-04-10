@@ -2,11 +2,15 @@ from threading import Thread
 from flask import Flask
 from crypto import crypto_app
 from infrastructure import chat_client
+import logging
+logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
 
 app = Flask(__name__)
 crypto = crypto_app.Crypto()
 Thread(target=crypto.start).start()
-chat_client.send_message("자동 매매를 시작합니다.")
+message = "자동 매매를 시작합니다."
+logging.DEBUG(message)
+chat_client.send_message(message)
 
 @app.route('/')
 def index():
@@ -16,6 +20,7 @@ def index():
 def start():
     Thread(target=crypto.start).start()
     message = "자동 매매를 시작합니다."
+    logging.DEBUG(message)
     chat_client.send_message(message)
     return message
 
@@ -23,6 +28,16 @@ def start():
 def stop():
     crypto.stop()
     message = "자동 매매를 종료합니다."
+    logging.DEBUG(message)
+    chat_client.send_message(message)
+    return message
+
+@app.route('/restart', methods=['POST'])
+def restart():
+    crypto.stop()
+    Thread(target=crypto.start).start()
+    message = "자동 매매를 재시작합니다."
+    logging.DEBUG(message)
     chat_client.send_message(message)
     return message
 

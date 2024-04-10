@@ -6,7 +6,6 @@ from crypto import currency, utils
 from crypto.classes import BuyingSignal, InvestmentProportion
 from infrastructure import chat_client, google_sheet_client
 import logging
-
 logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
 
 class Crypto:
@@ -80,10 +79,11 @@ class Crypto:
         return not self.is_now_am()
 
     def start(self):
-        
         self.work = True
         self.target_balance = google_sheet_client.get_target_balance()
-        chat_client.send_message(f'최대 매수 금액 : {format(self.target_balance, ",")}')
+        message = f'최대 매수 금액 : {format(self.target_balance, ",")}'
+        logging.debug(message)
+        chat_client.send_message(message)
 
         while self.work:
             logging.debug("매매 봇 동작 중...")
