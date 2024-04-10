@@ -93,7 +93,7 @@ class Crypto:
             if self.balance != 0 and self.is_now_pm():
                 logging.debug("매도 주문 실행")
                 Crypto.upbit.sell_market_order(currency.BTC, Crypto.upbit.get_balance(currency.BTC))
-                self.balancee = 0
+                self.balance = 0
                 time.sleep(60)
             
             time.sleep(5)

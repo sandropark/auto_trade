@@ -5,6 +5,7 @@ from infrastructure import chat_client
 
 app = Flask(__name__)
 crypto = crypto_app.Crypto()
+Thread(target=crypto.start).start()
 
 @app.route('/')
 def index():
