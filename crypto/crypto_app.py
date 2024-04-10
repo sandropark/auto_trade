@@ -87,7 +87,7 @@ class Crypto:
                 Crypto.upbit.buy_market_order(currency.BTC, 100000)
                 while self.balance == 0: # 매수 될 때까지 대기
                     logging.debug("매수 주문 후 잔고 조회 중...")
-                    self.balancee = Crypto.upbit.get_balance(currency.BTC)
+                    self.balance = Crypto.upbit.get_balance(currency.BTC)
                     time.sleep(1)
 
             if self.balance != 0 and self.is_now_pm():
