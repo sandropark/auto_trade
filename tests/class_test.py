@@ -9,7 +9,7 @@ import datetime as dt
 import pandas as pd
 import numpy as np
 import crypto.utils as utils
-import crypto.classes as classes
+import crypto.strategy as strategy
 import crypto.price_utils as priceUtils
 
 class TestMyTime(ut.TestCase):
@@ -173,7 +173,7 @@ class TestInvestmentProportion(ut.TestCase):
         )
 
         # when
-        volatility = classes.InvestmentProportion()._get_volatility(df)
+        volatility = strategy.InvestmentProportion()._get_volatility(df)
 
         # then
         self.assertEqual(volatility, 0.225)

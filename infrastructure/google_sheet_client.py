@@ -21,13 +21,11 @@ sheet_crypto_raw_data = doc.worksheet(SHEET_CRYPTO_RAW_DATA)
 def append_crypto_log(data : list):
     sheet_crypto_record.append_row(data)
 
-def get_target_balance() -> int:
-    return int(sheet_crypto_config.acell('B2').value.replace(',', ''))
-
-def get_total_balance() -> int:
+def get_total_cash() -> int:
     return int(sheet_crypto_config.acell('A2').value.replace(',', ''))
 
 def update_raw_data(df : pd.DataFrame):
+    doc.values_clear(f"{SHEET_CRYPTO_RAW_DATA}!A2:G1000")
     gd.set_with_dataframe(sheet_crypto_raw_data, dataframe=df, include_index=True)
 
 def get_am_strategy_buying_signal() -> bool:
@@ -35,3 +33,9 @@ def get_am_strategy_buying_signal() -> bool:
 
 def get_am_strategy_buing_proportion() -> float:
     return float(sheet_crypto_config.acell('D5').value)
+
+def get_vb_strategy_target_price() -> int:
+    return int(sheet_crypto_config.acell('A5').value.replace(',', ''))
+
+def get_vb_strategy_buing_proportion() -> float:
+    return float(sheet_crypto_config.acell('B5').value)

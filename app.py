@@ -5,10 +5,6 @@ from infrastructure import chat_client
 
 app = Flask(__name__)
 crypto = crypto_app.Crypto()
-Thread(target=crypto.start).start()
-message = "자동 매매를 시작합니다."
-chat_client.send_message(message)
-
 
 @app.route('/')
 def index():
