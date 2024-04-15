@@ -13,6 +13,7 @@ pytz = "^2024.1"
 pyupbit = "^0.2.33"
 flask = "^3.0.2"
 gspread = "^6.1.0"
+gspread-dataframe = "^3.3.1"
 
 
 [build-system]

@@ -12,7 +12,6 @@ class Crypto:
     with open('config/auto-trade-config.yml', encoding='UTF-8') as ymlfile:
         _cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
     upbit : pu.Upbit = pu.Upbit(_cfg['upbit']['access'], _cfg['upbit']['secret'])
-    total_balance = 30000000    # 전체 자산 조회 (엑셀에서 가져오기)
 
     def __init__(self, buying_signal : BuyingSignal = BuyingSignal(), 
                  investment_proportion : InvestmentProportion = InvestmentProportion()):
@@ -21,10 +20,12 @@ class Crypto:
         self.work : bool = True
         self.balance : float = Crypto.upbit.get_balance(currency.BTC)
         self.target_balance : int = 0
+        self.total_balance : int = 0
+        self.time : utils.MyTime = utils.MyTime()
     
     # TODO : 비동기
     def log(self):
-        google_sheet_client.append_row(self.report())
+        google_sheet_client.append_crypto_log(self.report())
         # chat_client.send_message("매수 - 리포트")
 
     def calculate_buying_quantity(self, lowest_price : float) -> float:
@@ -74,23 +75,35 @@ class Crypto:
     
     def is_now_pm(self) -> bool:
         return not self.is_now_am()
+    
+    def calulate_buying_amount(self) -> float:
+        return min(self.total_balance * google_sheet_client.get_am_strategy_buing_proportion(), Crypto.upbit.get_balance(currency.KRW))
+
+    def update_data(self):
+        google_sheet_client.update_raw_data(pu.get_ohlcv(currency.BTC, count=24 * 21, interval='minute60'))
 
     def start(self):
         self.work = True
         self.target_balance = google_sheet_client.get_target_balance()
+        self.total_balance = google_sheet_client.get_total_balance()
         message = f'최대 매수 금액 : {format(self.target_balance, ",")}'
         logging.debug(message)
         chat_client.send_message(message)
 
         while self.work:
             logging.debug("매매 봇 동작 중...")
+            if self.time.check_day_changed():
+                self.update_data()
+                time.sleep(10)
+
             if self.balance == 0 and self.is_now_am():
-                logging.debug("매수 주문 실행")
-                Crypto.upbit.buy_market_order(currency.BTC, self.target_balance)
-                while self.balance == 0: # 매수 될 때까지 대기
-                    logging.debug("매수 주문 후 잔고 조회 중...")
-                    self.balance = Crypto.upbit.get_balance(currency.BTC)
-                    time.sleep(1)
+                if google_sheet_client.get_am_strategy_buying_signal():
+                    logging.debug("매수 주문 실행")
+                    Crypto.upbit.buy_market_order(currency.BTC, self.calulate_buying_amount())
+                    while self.balance == 0: # 매수 될 때까지 대기
+                        logging.debug("매수 주문 후 잔고 조회 중...")
+                        self.balance = Crypto.upbit.get_balance(currency.BTC)
+                        time.sleep(1)
 
             if self.balance != 0 and self.is_now_pm():
                 logging.debug("매도 주문 실행")
