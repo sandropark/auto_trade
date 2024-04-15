@@ -94,7 +94,9 @@ class Crypto:
 
             if self.balance == 0 and self.is_now_am():
                 if google_sheet_client.get_am_strategy_buying_signal():
-                    logging.debug("매수 주문 실행")
+                    message = "매수 시그널 발생. 매수 주문을 실행합니다."
+                    chat_client.send_message(message)
+                    logging.debug(message)
                     Crypto.upbit.buy_market_order(currency.BTC, self.calulate_buying_amount())
                     while self.balance == 0: # 매수 될 때까지 대기
                         logging.debug("매수 주문 후 잔고 조회 중...")
