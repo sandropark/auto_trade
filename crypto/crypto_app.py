@@ -19,7 +19,6 @@ class Crypto:
         self.investment_proportion = investment_proportion
         self.work : bool = True
         self.balance : float = Crypto.upbit.get_balance(currency.BTC)
-        self.target_balance : int = 0
         self.total_balance : int = 0
         self.time : utils.MyTime = utils.MyTime()
     
@@ -84,11 +83,8 @@ class Crypto:
 
     def start(self):
         self.work = True
-        self.target_balance = google_sheet_client.get_target_balance()
         self.total_balance = google_sheet_client.get_total_balance()
-        message = f'최대 매수 금액 : {format(self.target_balance, ",")}'
-        logging.debug(message)
-        chat_client.send_message(message)
+        self.update_data()
 
         while self.work:
             logging.debug("매매 봇 동작 중...")
