@@ -1,4 +1,3 @@
-import datetime as dt
 import requests
 import yaml
 from crypto import utils
