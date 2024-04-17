@@ -9,7 +9,7 @@ class MyTime:
         return dt.datetime.now(timezone('Asia/Seoul'))
 
     def check_day_changed(self) -> bool:
-        if not self._equals(self.get_now().date(), self.today.date()):
-            self.today = self.get_now()
+        if not MyTime.get_now().date() == self.today.date():
+            self.today = MyTime.get_now()
             return True
         return False

@@ -2,7 +2,7 @@ from abc import *
 import pyupbit as pu
 from crypto import currency, account
 from infrastructure import google_sheet_client as gsc
-from utils.upbit_util import UpbitUtil
+from utils import upbit_util
 
 class Strategy(ABC):
     @abstractmethod
@@ -53,4 +53,4 @@ class VBStrategy(Strategy): # Volatility Break Strategy (변동성 돌파 전략
         return min(gsc.get_vb_strategy_buing_amount(), account.get_total_cash() * self.investment_proportion)
 
     def __shall_i_buy__(self) -> bool:
-        return UpbitUtil.get_current_price() > self.target_price
+        return upbit_util.get_current_price() > self.target_price

@@ -14,7 +14,6 @@ class Crypto:
         self.working : bool = True  # 매매 봇 동작 여부
         self.time : MyTime = MyTime()
         self.strategies : list[Strategy] = strategies
-        self.__init_data__()
 
         Thread(target=self.start).start()
 
@@ -28,6 +27,7 @@ class Crypto:
     def start(self):
         self.working = True
         chat_client.send_message("자동 매매를 시작합니다.")
+        self.__refresh__()
 
         while self.working:
             logging.debug("매매 봇 동작 중...")

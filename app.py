@@ -26,5 +26,10 @@ def restart():
     Thread(target=crypto.start).start()
     return "자동 매매를 재시작합니다."
 
+@app.route('/raw-data', methods=['PUT'])
+def update_raw_data():
+    crypto.__refresh__()
+    return "데이터 업데이트 완료!"
+
 if __name__ == '__main__':
     app.run(debug=True)
