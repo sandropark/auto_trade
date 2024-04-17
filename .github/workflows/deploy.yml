@@ -45,3 +45,11 @@ jobs:
             fi
             sudo docker run -d -p 5000:5000 \
             --name auto-trade ${{ secrets.DOCKERHUB_USERNAME }}/auto-trade:${{ github.run_number }}
+
+            while true; do
+              sleep 2
+              if [ "$(curl http://localhost:5000)" ]; then
+                echo "auto-trade is running"
+                break
+              fi
+            done
