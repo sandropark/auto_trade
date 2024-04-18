@@ -12,9 +12,11 @@ SECRET = _cfg['upbit']['secret']
 upbit : pu.Upbit = pu.Upbit(ACCESS, SECRET)
 
 
-# print(upbit.buy_market_order(currency.BTC, 10000))
-# print(upbit.get_balance(currency.BTC))
+# print(upbit.buy_market_order(currency.BTC, 5000))
 
 # print(balance['balance'])
 # print(upbit.sell_market_order(currency.BTC, upbit.get_balance(currency.BTC)))
-print(upbit.get_balance(currency.BTC))
+# print(upbit.get_balance(currency.BTC))
+# print(upbit.get_amount(currency.BTC))
+# print(upbit.get_balance())
+print(format(upbit.get_balance(currency.BTC), ".8f"))
