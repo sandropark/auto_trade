@@ -39,7 +39,10 @@ class AMStrategy(Strategy): # 오전 전략
         self.buying_amount = gsc.get_am_strategy_buing_amount()
         self.buying_signal = gsc.get_am_strategy_buying_signal()
         self.investment_proportion = gsc.get_am_strategy_buing_proportion()
-        logging.debug(f"{AMStrategy.title} - buying_amount : {self.buying_amount}, buying_signal : {self.buying_signal}, investment_proportion : {self.investment_proportion}")
+        logging.debug(f"{AMStrategy.title} - 
+                        buying_amount : {self.buying_amount}, 
+                        buying_signal : {self.buying_signal}, 
+                        investment_proportion : {self.investment_proportion}")
         
     def unset_bought(self):
         self.bought = False
@@ -62,7 +65,10 @@ class VBStrategy(Strategy): # Volatility Break Strategy (변동성 돌파 전략
         self.buying_amount = gsc.get_vb_strategy_buing_amount()
         self.target_price = gsc.get_vb_strategy_target_price()
         self.investment_proportion = gsc.get_vb_strategy_buing_proportion()
-        logging.debug(f"{VBStrategy.title} - buying_amount : {self.buying_amount}, target_price : {self.target_price}, investment_proportion : {self.investment_proportion}")
+        logging.debug(f"{VBStrategy.title} - 
+                        buying_amount : {self.buying_amount}, 
+                        target_price : {self.target_price}, 
+                        investment_proportion : {self.investment_proportion}")
 
     def __shall_i_buy__(self) -> bool:
         return self.investment_proportion > 0 and account.get_current_price() > self.target_price
