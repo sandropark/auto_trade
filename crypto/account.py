@@ -2,7 +2,7 @@ import logging
 import time
 import yaml
 import pyupbit as pu
-from crypto import currency
+from crypto.consts import *
 from infrastructure import google_sheet_client as gsc
 logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
 
@@ -28,15 +28,16 @@ def sell_all(currency : str):
     logging.debug("매도 주문 실행")
     upbit.sell_market_order(currency, balance_btc)
 
-def buy_market_order(currency : str, amount : float):
-    upbit.buy_market_order(currency, amount)
+def buy_market_order(currency : str, amount : float) -> dict :
+    return upbit.buy_market_order(currency, amount)
 
-def buy_btc(amount : float):
+def buy_btc(amount : float) -> dict :
     global balance_btc, amount_btc
-    buy_market_order(currency.BTC, amount)
+    order_res : dict = buy_market_order(currency.BTC, amount)
     time.sleep(1)
     balance_btc += get_balance(currency.BTC)
     amount_btc += upbit.get_amount(currency.BTC)
+    return order_res
 
 def get_balance(currency : str) -> float:
     return upbit.get_balance(currency)

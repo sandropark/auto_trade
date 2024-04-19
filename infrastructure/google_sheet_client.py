@@ -1,7 +1,8 @@
 import gspread
 import yaml
 import gspread_dataframe as gd
-from crypto import account, currency
+from crypto import account
+from crypto.consts import *
 
 with open('config/auto-trade-config.yml') as ymlfile:
     _cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)

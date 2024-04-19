@@ -1,7 +1,9 @@
 from abc import *
 import logging
 from crypto import account
+from crypto.consts import *
 from infrastructure import google_sheet_client as gsc
+from utils.my_time import MyTime
 logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
 
 class Strategy(ABC):
@@ -21,6 +23,10 @@ def buying_log(title : str):
 def get_buying_amount(strategy_buying_amount : float, investment_proportion : float) -> float:
     return min(strategy_buying_amount, account.total_cash * investment_proportion)
 
+def report_of_buying(strategy_title : str, buying_amount : float, order_res : dict):
+    data : list = [MyTime.get_now(), transaction.BUY, currency.BTC,  order_res['uuid'], buying_amount, strategy_title]
+    gsc.append_crypto_log(data)
+
 class AMStrategy(Strategy): # 오전 전략
     title : str = "오전 전략"
 
@@ -30,10 +36,10 @@ class AMStrategy(Strategy): # 오전 전략
     def buy(self):
         if not self.bought and self.buying_signal:
             buying_log(AMStrategy.title)
-            account.buy_btc(
-                get_buying_amount(self.buying_amount, self.investment_proportion)
-            )
+            buying_amount = get_buying_amount(self.buying_amount, self.investment_proportion)
+            order_res : dict = account.buy_btc(buying_amount)
             self.bought = True
+            report_of_buying(AMStrategy.title, buying_amount, order_res)
 
     def refresh(self):
         self.buying_amount = gsc.get_am_strategy_buing_amount()
@@ -46,7 +52,7 @@ class AMStrategy(Strategy): # 오전 전략
         
     def unset_bought(self):
         self.bought = False
-        
+    
 class VBStrategy(Strategy): # Volatility Break Strategy (변동성 돌파 전략)
     title : str = "변동성 돌파 전략"
 
@@ -56,10 +62,10 @@ class VBStrategy(Strategy): # Volatility Break Strategy (변동성 돌파 전략
     def buy(self):
         if not self.bought and self.__shall_i_buy__():
             buying_log(VBStrategy.title)
-            account.buy_btc(
-                get_buying_amount(self.buying_amount, self.investment_proportion)
-            )
+            buying_amount = get_buying_amount(self.buying_amount, self.investment_proportion)
+            order_res = account.buy_btc(buying_amount)
             self.bought = True
+            report_of_buying(VBStrategy.title, buying_amount, order_res)
             
     def refresh(self):
         self.buying_amount = gsc.get_vb_strategy_buing_amount()
