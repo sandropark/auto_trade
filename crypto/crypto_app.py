@@ -16,11 +16,10 @@ class Crypto:
 
     def __refresh__(self):
         gsc.update_resent_20days_candle() # 최근 20일간의 캔들 데이터 업데이트
-        # TODO : 데이터 업데이트 완료 확인
         gsc.update_upbit_krw_balance()
         time.sleep(2)
         [strategy.refresh() for strategy in self.strategies]
-        account.refresh()
+        account.refresh_total_cash()
 
     def start(self):
         self.working = True
@@ -43,6 +42,7 @@ class Crypto:
             logging.debug("현재는 오전입니다.")
             [strategy.buy() for strategy in self.strategies]
             time.sleep(10)
+            account.refresh_balance_and_amount()
     
     def __check_is_now_pm__(self):
         if self.__is_now_pm__():
