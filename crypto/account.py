@@ -17,8 +17,6 @@ def refresh():
     global balance_btc, amount_btc
     balance_btc = upbit.get_balance(currency.BTC)
     amount_btc = upbit.get_amount(currency.BTC)
-    gsc.update_upbit_krw_balance()
-    gsc.update_btc_balance_and_amount() 
 
 def sell_all_btc():
     global balance_btc, amount_btc

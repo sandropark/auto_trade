@@ -1,4 +1,3 @@
-from abc import *
 import logging
 from crypto import account
 from crypto.consts import *
@@ -6,14 +5,15 @@ from infrastructure import google_sheet_client as gsc
 from utils.my_time import MyTime
 logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
 
-class Strategy(ABC):
-    @abstractmethod
+class Strategy():
+    def __init__(self):
+        self.bought : bool
+        self.buying_amount : float
+        self.buying_signal : bool
     def buy(self):
         pass
-    @abstractmethod
     def refresh(self):
         pass
-    @abstractmethod
     def unset_bought(self):
         pass
 
@@ -33,10 +33,10 @@ class AMStrategy(Strategy): # 오전 전략
             order_res : dict = account.buy_btc(self.buying_amount)
             self.bought = True
             gsc.set_am_strategy_bouhgt(True)
-            report_of_buying(AMStrategy.title, self.buying_amount, order_res)
+            # report_of_buying(AMStrategy.title, self.buying_amount, order_res)
 
     def refresh(self):
-        self.bought : bool = gsc.get_am_strategy_bouhgt()
+        self.bought = gsc.get_am_strategy_bouhgt()
         self.buying_amount = gsc.get_am_strategy_buing_amount()
         self.buying_signal = gsc.get_am_strategy_buying_signal()
         
@@ -53,7 +53,7 @@ class VBStrategy(Strategy): # Volatility Break Strategy (변동성 돌파 전략
             order_res = account.buy_btc(self.buying_amount)
             self.bought = True
             gsc.set_vb_strategy_bouhgt(True)
-            report_of_buying(VBStrategy.title, self.buying_amount, order_res)
+            # report_of_buying(VBStrategy.title, self.buying_amount, order_res)
             
     def refresh(self):
         self.bought = gsc.get_vb_strategy_bouhgt()

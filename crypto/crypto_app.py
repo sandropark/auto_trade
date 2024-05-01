@@ -30,10 +30,6 @@ class Crypto:
             self.__check_is_now_am__()
             self.__check_is_now_pm__()
 
-    def __check_day_has_changed__(self):
-        if self.time.check_day_changed():
-            self.__refresh__()
-
     def __check_is_now_am__(self):
         if self.__is_now_am__():
             self.__refresh__()

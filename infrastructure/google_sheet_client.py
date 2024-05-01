@@ -29,10 +29,6 @@ def update_resent_20days_candle():
 def update_upbit_krw_balance():
     sheet_crypto_config.update_acell('C2', account.get_balance(currency.KRW))
 
-def update_btc_balance_and_amount():
-    sheet_crypto_config.update_acell('D2', account.amount_btc)
-    sheet_crypto_config.update_acell('E2', account.get_balance(currency.BTC))
-
 def get_vb_strategy_target_price() -> int:
     return int(sheet_crypto_config.acell('A5').value.replace(',', ''))
 
