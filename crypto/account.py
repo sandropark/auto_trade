@@ -14,15 +14,17 @@ balance_btc : float = upbit.get_balance(currency.BTC)
 amount_btc : float = upbit.get_amount(currency.BTC)
 
 def refresh():
-    global total_cash
-    total_cash = gsc.get_total_cash()
-    logging.debug(f"total_cash : {total_cash}, balance_btc : {format(balance_btc, ".8f")}, amount_btc : {amount_btc}")
-    
+    global balance_btc, amount_btc
+    balance_btc = upbit.get_balance(currency.BTC)
+    amount_btc = upbit.get_amount(currency.BTC)
+    gsc.update_upbit_krw_balance()
+    gsc.update_btc_balance_and_amount() 
+
 def sell_all_btc():
     global balance_btc, amount_btc
+    sell_all(currency.BTC)
     balance_btc = 0
     amount_btc = 0
-    sell_all(currency.BTC)
 
 def sell_all(currency : str):
     logging.debug("매도 주문 실행")
