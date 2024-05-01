@@ -2,7 +2,7 @@ import logging
 import time
 import yaml
 import pyupbit as pu
-from crypto import currency
+from crypto.consts import *
 from infrastructure import google_sheet_client as gsc
 logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
 
@@ -14,37 +14,32 @@ balance_btc : float = upbit.get_balance(currency.BTC)
 amount_btc : float = upbit.get_amount(currency.BTC)
 
 def refresh():
-    refresh_total_cash()
-    refresh_balance_and_amount()
-    gsc.update_upbit_btc_amount()
-    gsc.update_upbit_btc_balance()
-
-def refresh_total_cash():
-    global total_cash
-    total_cash = gsc.get_total_cash()
-    logging.debug(f"total_cash : {total_cash}, balance_btc : {format(balance_btc, ".8f")}, amount_btc : {amount_btc}")
-
-def refresh_balance_and_amount():
     global balance_btc, amount_btc
-    balance_btc = get_balance(currency.BTC)
+    balance_btc = upbit.get_balance(currency.BTC)
     amount_btc = upbit.get_amount(currency.BTC)
-    logging.debug(f"total_cash : {total_cash}, balance_btc : {format(balance_btc, ".8f")}, amount_btc : {amount_btc}")
-    
+    gsc.update_upbit_krw_balance()
+    gsc.update_btc_balance_and_amount() 
+
 def sell_all_btc():
     global balance_btc, amount_btc
+    sell_all(currency.BTC)
     balance_btc = 0
     amount_btc = 0
-    sell_all(currency.BTC)
 
 def sell_all(currency : str):
     logging.debug("매도 주문 실행")
     upbit.sell_market_order(currency, balance_btc)
 
-def buy_market_order(currency : str, amount : float):
-    upbit.buy_market_order(currency, amount)
+def buy_market_order(currency : str, amount : float) -> dict :
+    return upbit.buy_market_order(currency, amount)
 
-def buy_btc(amount : float):
-    buy_market_order(currency.BTC, amount)
+def buy_btc(amount : float) -> dict :
+    global balance_btc, amount_btc
+    order_res : dict = buy_market_order(currency.BTC, amount)
+    time.sleep(1)
+    balance_btc += get_balance(currency.BTC)
+    amount_btc += upbit.get_amount(currency.BTC)
+    return order_res
 
 def get_balance(currency : str) -> float:
     return upbit.get_balance(currency)

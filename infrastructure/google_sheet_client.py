@@ -1,7 +1,8 @@
 import gspread
 import yaml
 import gspread_dataframe as gd
-from crypto import account, currency
+from crypto import account
+from crypto.consts import *
 
 with open('config/auto-trade-config.yml') as ymlfile:
     _cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
@@ -21,9 +22,6 @@ sheet_crypto_raw_data = doc.worksheet(SHEET_CRYPTO_RAW_DATA)
 def append_crypto_log(data : list):
     sheet_crypto_record.append_row(data)
 
-def get_total_cash() -> int:
-    return int(sheet_crypto_config.acell('A2').value.replace(',', ''))
-
 def update_resent_20days_candle():
     doc.values_clear(f"{SHEET_CRYPTO_RAW_DATA}!A2:G1000")
     gd.set_with_dataframe(sheet_crypto_raw_data, dataframe=account.get_20days_candle(), include_index=True)
@@ -31,26 +29,30 @@ def update_resent_20days_candle():
 def update_upbit_krw_balance():
     sheet_crypto_config.update_acell('C2', account.get_balance(currency.KRW))
 
-def update_upbit_btc_amount():
+def update_btc_balance_and_amount():
     sheet_crypto_config.update_acell('D2', account.amount_btc)
-
-def update_upbit_btc_balance():
-    sheet_crypto_config.update_acell('E2', account.balance_btc)
+    sheet_crypto_config.update_acell('E2', account.get_balance(currency.BTC))
 
 def get_vb_strategy_target_price() -> int:
     return int(sheet_crypto_config.acell('A5').value.replace(',', ''))
 
-def get_vb_strategy_buing_proportion() -> float:
-    return float(sheet_crypto_config.acell('B5').value)
-
 def get_vb_strategy_buing_amount() -> int:
-    return int(sheet_crypto_config.acell('C5').value.replace(',', ''))
+    return int(sheet_crypto_config.acell('E5').value.replace(',', ''))
+
+def get_vb_strategy_bouhgt() -> bool:
+    return sheet_crypto_config.acell('F5').value == 'TRUE'
+
+def set_vb_strategy_bouhgt(bought : bool):
+    sheet_crypto_config.update_acell('F5', 'TRUE' if bought else 'FALSE')
 
 def get_am_strategy_buying_signal() -> bool:
     return sheet_crypto_config.acell('A8').value == 'TRUE'
 
-def get_am_strategy_buing_proportion() -> float:
-    return float(sheet_crypto_config.acell('B8').value)
-
 def get_am_strategy_buing_amount() -> int:
-    return int(sheet_crypto_config.acell('C8').value.replace(',', ''))
+    return int(sheet_crypto_config.acell('E8').value.replace(',', ''))
+
+def get_am_strategy_bouhgt() -> bool:
+    return sheet_crypto_config.acell('F8').value == 'TRUE'
+
+def set_am_strategy_bouhgt(bought : bool):
+    sheet_crypto_config.update_acell('F8', 'TRUE' if bought else 'FALSE')
