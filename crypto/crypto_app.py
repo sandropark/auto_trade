@@ -14,16 +14,17 @@ class Crypto:
         self.time : MyTime = MyTime()
         self.strategies : list[Strategy] = strategies
 
-    def __refresh__(self):
+    def refresh(self):
         gsc.update_resent_20days_candle() # 최근 20일간의 캔들 데이터 업데이트
         gsc.update_upbit_krw_balance()
         time.sleep(5)
         [strategy.refresh() for strategy in self.strategies]
+        chat_client.send_message("데이터 업데이트 완료!")
 
     def start(self):
         self.working = True
         chat_client.send_message("자동 매매를 시작합니다.")
-        self.__refresh__()
+        self.refresh()
 
         while self.working:
             logging.debug("매매 봇 동작 중...")
@@ -33,7 +34,7 @@ class Crypto:
     def __check_is_now_am__(self):
         if self.__is_now_am__():
             chat_client.send_message("오전입니다. 데이터를 업데이트합니다.")
-            self.__refresh__()
+            self.refresh()
             while self.working and self.__is_now_am__():
                 logging.debug("현재는 오전입니다.")
                 [strategy.buy() for strategy in self.strategies]

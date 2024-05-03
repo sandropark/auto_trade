@@ -1,6 +1,5 @@
 from threading import Thread
 from flask import Flask
-from crypto import account
 from crypto.crypto_app import Crypto
 from crypto.strategy import AMStrategy, VBStrategy
 from infrastructure import chat_client
@@ -30,8 +29,7 @@ def restart():
 
 @app.route('/raw-data', methods=['PUT'])
 def update_raw_data():
-    crypto.__refresh__()
-    chat_client.send_message("데이터 업데이트 완료!")
+    crypto.refresh()
     return "데이터 업데이트 완료!"
 
 if __name__ == '__main__':
