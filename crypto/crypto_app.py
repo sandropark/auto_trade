@@ -32,8 +32,8 @@ class Crypto:
 
     def __check_is_now_am__(self):
         if self.__is_now_am__():
+            chat_client.send_message("오전입니다. 데이터를 업데이트합니다.")
             self.__refresh__()
-            chat_client.send_message("데이터 업데이트 완료!")
             while self.working and self.__is_now_am__():
                 logging.debug("현재는 오전입니다.")
                 [strategy.buy() for strategy in self.strategies]
@@ -41,6 +41,7 @@ class Crypto:
     
     def __check_is_now_pm__(self):
         if self.__is_now_pm__():
+            chat_client.send_message("오후입니다. 모든 비트코인을 판매합니다.")
             account.refresh()
             [strategy.unset_bought() for strategy in self.strategies]
             account.sell_all_btc()
