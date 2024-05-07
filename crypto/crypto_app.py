@@ -16,7 +16,7 @@ class Crypto:
 
     def refresh(self):
         gsc.update_resent_20days_candle() # 최근 20일간의 캔들 데이터 업데이트
-        if self.__is_now_pm__() or self.__is_all_strategies_not_bought__():
+        if self.__is_all_strategies_not_bought__():
             gsc.update_upbit_krw_balance()
         time.sleep(5)
         [strategy.refresh() for strategy in self.strategies]
@@ -28,7 +28,6 @@ class Crypto:
     def start(self):
         self.working = True
         chat_client.send_message("자동 매매를 시작합니다.")
-        self.refresh()
 
         while self.working:
             logging.debug("매매 봇 동작 중...")
