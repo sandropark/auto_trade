@@ -16,10 +16,14 @@ class Crypto:
 
     def refresh(self):
         gsc.update_resent_20days_candle() # 최근 20일간의 캔들 데이터 업데이트
-        gsc.update_upbit_krw_balance()
+        if self.__is_now_pm__() or self.__is_all_strategies_not_bought__():
+            gsc.update_upbit_krw_balance()
         time.sleep(5)
         [strategy.refresh() for strategy in self.strategies]
         chat_client.send_message("데이터 업데이트 완료!")
+
+    def __is_all_strategies_not_bought__(self) -> bool:
+        return all([strategy.bought for strategy in self.strategies])
 
     def start(self):
         self.working = True
@@ -46,6 +50,8 @@ class Crypto:
             account.refresh()
             [strategy.unset_bought() for strategy in self.strategies]
             account.sell_all_btc()
+            time.sleep(30)
+            gsc.update_upbit_krw_balance()
             while self.working and self.__is_now_pm__():
                 logging.debug("현재는 오후입니다.")
                 time.sleep(60)

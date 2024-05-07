@@ -6,8 +6,8 @@ from utils.my_time import MyTime
 logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
 
 class Strategy():
-    def __init__(self):
-        self.bought : bool
+    def __init__(self, bought : bool = False):
+        self.bought : bool = bought
         self.buying_amount : float
         self.buying_signal : bool
     def buy(self):

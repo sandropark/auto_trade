@@ -8,9 +8,7 @@ import pyupbit as pu
 import datetime as dt
 import pandas as pd
 import numpy as np
-import crypto.utils as utils
 import crypto.strategy as strategy
-import crypto.price_utils as priceUtils
 
 class TestMyTime(ut.TestCase):
     # 시간을 비교하는 테스트

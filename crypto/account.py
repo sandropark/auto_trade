@@ -19,8 +19,11 @@ def refresh():
     amount_btc = upbit.get_amount(currency.BTC)
 
 def sell_all_btc():
-    global balance_btc, amount_btc
     sell_all(currency.BTC)
+    __set_btc_zero__()
+
+def __set_btc_zero__():
+    global balance_btc, amount_btc
     balance_btc = 0
     amount_btc = 0
 
@@ -39,7 +42,7 @@ def buy_btc(amount : float) -> dict :
     amount_btc += upbit.get_amount(currency.BTC)
     return order_res
 
-def get_balance(currency : str) -> float:
+def get_balance(currency : str = "KRW") -> float:
     return upbit.get_balance(currency)
 
 def has_amount_btc() -> bool:
