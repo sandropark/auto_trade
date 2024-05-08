@@ -4,9 +4,7 @@ from crypto.strategy import Strategy
 from infrastructure import chat_client
 from infrastructure import google_sheet_client as gsc
 from utils.my_time import MyTime
-
-import logging
-logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
+from utils.logger import logging
 
 class Crypto:
     def __init__(self, strategies : list[Strategy]):

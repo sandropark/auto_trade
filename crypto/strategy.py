@@ -1,9 +1,8 @@
-import logging
 from crypto import account
 from crypto.consts import *
 from infrastructure import google_sheet_client as gsc
 from utils.my_time import MyTime
-logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
+from utils.logger import logging
 
 class Strategy():
     def __init__(self, bought : bool = False):

@@ -1,10 +1,8 @@
-import logging
 import time
 import yaml
 import pyupbit as pu
 from crypto.consts import *
-from infrastructure import google_sheet_client as gsc
-logging.basicConfig(format='%(asctime)s %(levelname)s %(message)s',level=logging.DEBUG)
+from utils.logger import logging
 
 with open('config/auto-trade-config.yml', encoding='UTF-8') as ymlfile:
     _cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
