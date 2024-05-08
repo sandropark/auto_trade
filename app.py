@@ -13,7 +13,10 @@ def index():
 
 @app.route('/start', methods=['POST'])
 def start():
-    Thread(target=crypto.start).start()
+    try :
+        Thread(target=crypto.start).start()
+    except Exception as e:
+        chat_client.send_message(f"에러 발생! {e}")
     return "자동 매매를 시작합니다."
 
 @app.route('/stop', methods=['POST'])
@@ -23,8 +26,8 @@ def stop():
 
 @app.route('/restart', methods=['POST'])
 def restart():
-    crypto.stop()
-    Thread(target=crypto.start).start()
+    stop()
+    start()
     return "자동 매매를 재시작합니다."
 
 @app.route('/raw-data', methods=['PUT'])
