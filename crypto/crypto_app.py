@@ -16,12 +16,12 @@ class Crypto:
         gsc.update_resent_20days_candle() # 최근 20일간의 캔들 데이터 업데이트
         if self.__is_all_strategies_not_bought__():
             gsc.update_upbit_krw_balance()
-        time.sleep(5)
-        [strategy.refresh() for strategy in self.strategies]
+            time.sleep(5)
+            [strategy.refresh() for strategy in self.strategies]
         chat_client.send_message("데이터 업데이트 완료!")
 
     def __is_all_strategies_not_bought__(self) -> bool:
-        return all([strategy.bought for strategy in self.strategies])
+        return all([not strategy.bought for strategy in self.strategies])
 
     def start(self):
         self.working = True
