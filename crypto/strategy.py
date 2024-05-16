@@ -5,10 +5,9 @@ from utils.my_time import MyTime
 from utils.logger import logging
 
 class Strategy():
-    def __init__(self, bought : bool = False):
+    def __init__(self, bought : bool = False, buying_amount : float = 0):
         self.bought : bool = bought
         self.buying_amount : float
-        self.buying_signal : bool
     def buy(self):
         pass
     def refresh(self):

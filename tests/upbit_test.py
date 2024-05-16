@@ -11,6 +11,7 @@ SECRET = _cfg['upbit']['secret']
 upbit : pu.Upbit = pu.Upbit(ACCESS, SECRET)
 
 # order_res = upbit.buy_market_order(currency.BTC, 5500)
+# print(order_res)
 
 # print(type(order_res))
 # print(order_res['uuid'])
@@ -18,7 +19,7 @@ upbit : pu.Upbit = pu.Upbit(ACCESS, SECRET)
 # print(upbit.get_order("3c028154-fcd4-4b7e-bfae-cf17dc8a3655", 'done'))
 
 # print(balance['balance'])
-print(upbit.sell_market_order(currency.BTC, upbit.get_balance(currency.BTC)))
+# print(upbit.sell_market_order(currency.BTC, upbit.get_balance(currency.BTC)))
 # print(upbit.get_balance(currency.BTC))
 # print(upbit.get_amount(currency.BTC))
 # print(upbit.get_balance())
