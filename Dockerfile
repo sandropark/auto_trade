@@ -1,4 +1,4 @@
-FROM python:3.12.2
+FROM python:3.12.2-alpine
 
 # poetry, flask 설치
 RUN pip install poetry && pip install flask
