@@ -12,7 +12,7 @@ jobs:
     steps:
       #  소스코드 불러오기
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
