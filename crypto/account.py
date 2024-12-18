@@ -52,8 +52,8 @@ def get_balance(currency: str = "KRW") -> float:
 
 
 def get_all_balance() -> float:
-    stocks = upbit.get_balances()
-    total_balance = 0.0
+    stocks: list[dict] = upbit.get_balances()
+    total_balance: float = 0.0
 
     for stock in stocks:
         if stock["currency"] == "KRW":
