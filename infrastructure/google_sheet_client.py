@@ -27,7 +27,7 @@ def update_resent_20days_candle():
 
 def update_upbit_krw_balance():
     sheet_crypto_config.update_acell("C2", account.get_balance(currency.KRW))
-    sheet_crypto_config.update_acell("D2", account.get_all_balance())
+    # sheet_crypto_config.update_acell("D2", account.get_all_balance()) 추후에 수정하기
 
 
 def get_vb_strategy_target_price() -> int:
