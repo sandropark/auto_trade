@@ -3,3 +3,4 @@ venv
 config.yml
 **/__pycache__
 **/tempCodeRunnerFile.py
+.DS_Store
